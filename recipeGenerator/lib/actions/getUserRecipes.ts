@@ -1,10 +1,14 @@
-import clientPromise from "@/lib/mongo";
+// lib/actions/getUserRecipes.ts
+import { connectToDB } from "@/lib/mongo";
 
 export async function getUserRecipes(userId: string) {
-  const client = await clientPromise;
-  const db = client.db("recipe-db"); //   DB name
+  const mongoose = await connectToDB();
+
+  // Get the native MongoDB client from the mongoose connection
+  const db = mongoose.connection.getClient().db("recipe-db");
+
   const recipes = await db
-    .collection("recipes") //  a collection
+    .collection("recipes") // Collection name
     .find({ userId })
     .toArray();
 
